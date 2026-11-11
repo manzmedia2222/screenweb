@@ -118,12 +118,48 @@ textarea{width:100%;height:120px;resize:vertical;border:1px solid var(--line);ba
 .foot{width:320px;height:12px;background:linear-gradient(var(--silver),var(--silver-d));border-radius:6px;box-shadow:0 18px 30px -14px rgba(0,0,0,.5)}
 .k-bare .lid{padding:6px;border-radius:12px}
 .k-bare .scr{border-radius:6px}
+#q{font:14px var(--body)}
+.mtop,.mnav,.scrim,.shead,.s-set{display:none}
+@media (min-width:901px) and (max-width:1200px){.app{grid-template-columns:minmax(0,1fr) 360px}}
+/* Handphone: pratinjau memenuhi layar, kontrol dipindah ke menu bawah dan lembar geser. */
 @media (max-width:900px){
-  html,body{height:auto}
-  .app{height:auto;display:block}
-  .view{display:block}
-  .stage{height:80vh;padding:14px 8px}
-  .panel{border-left:0;border-top:1px solid var(--line);overflow:visible}
+  .app{display:flex;flex-direction:column}
+  .view{flex:1;min-height:0;display:flex;flex-direction:column}
+  .mtop{display:flex;align-items:center;gap:10px;padding:8px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+  .mtop b{font:700 18px/1 var(--display);letter-spacing:-.01em}
+  .stage{flex:1;padding:10px}
+  .status{padding:8px 16px;gap:6px 10px}
+  .status .ctl{display:none}
+  .mnav{display:grid;grid-template-columns:repeat(3,1fr);height:56px;background:var(--panel);border-top:1px solid var(--line)}
+  .mnav button{border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:12px;font-weight:600;color:var(--muted)}
+  .mnav button[aria-pressed="true"]{color:var(--accent)}
+  .scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:30}
+  .app[data-sheet]:not([data-sheet=""]) .scrim{display:block}
+  .panel{position:fixed;left:0;right:0;bottom:calc(56px + env(safe-area-inset-bottom,0px));max-height:66dvh;z-index:31;
+    border:0;border-top:1px solid var(--line);border-radius:16px 16px 0 0;box-shadow:0 -14px 40px rgba(0,0,0,.28);
+    transform:translateY(calc(100% + 80px));visibility:hidden;transition:transform .22s ease,visibility 0s .22s}
+  .app[data-sheet]:not([data-sheet=""]) .panel{transform:none;visibility:visible;transition:transform .22s ease}
+  .panel .head,.panel .credit{display:none}
+  .shead{display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:2;background:var(--panel);padding:12px 18px;border-bottom:1px solid var(--line)}
+  .shead b{font:700 17px/1 var(--display)}
+  .panel .s-src,.panel .s-dev{display:none}
+  .app[data-sheet="src"] .s-src,.app[data-sheet="dev"] .s-dev,.app[data-sheet="set"] .s-set{display:grid}
+  .app[data-sheet="set"] .credit{display:block}
+  .sec{border-top:0}
+  .btn,.ibtn{min-height:44px}
+  .tabs button{min-height:40px;padding:8px 18px}
+  .field,textarea,#q{font-size:16px}
+  .field{min-height:44px}
+  .chips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}
+  .chip{flex:none;padding:10px 16px;font-size:14px}
+  .items{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dv{padding:12px;min-height:54px}
+  .zoom{display:flex}
+  .zoom button{flex:1;min-height:44px;font-size:13px}
+}
+@media (max-width:900px) and (max-height:520px){
+  .mtop{display:none}
+  .panel{max-height:78dvh}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -157,27 +193,41 @@ header b{font-size:20px;letter-spacing:-.01em}nav{display:flex;gap:22px;font-siz
 
 <div class="app">
   <section class="view">
+    <div class="mtop">
+      <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect x="2" y="4" width="24" height="17" rx="3" stroke="var(--ink)" stroke-width="2"/><rect x="9" y="22.5" width="10" height="2.5" rx="1.2" fill="var(--accent)"/><rect x="6" y="8" width="10" height="2" rx="1" fill="var(--accent)"/></svg>
+      <b>Screen Web</b><span class="sp"></span>
+      <button class="ibtn js-theme" type="button">Tema</button>
+    </div>
     <div class="stage" id="stage"><div class="scaler" id="scaler"></div></div>
     <div class="status">
       <span><b id="sname"></b> <span class="m" id="sdim"></span></span>
       <span class="mut m" id="sinfo"></span>
       <span class="sp"></span>
-      <button class="ibtn" id="rot" type="button">Putar</button>
-      <div class="zoom" id="zoom" role="group" aria-label="Zoom">
-        <button type="button" data-z="fit" aria-pressed="true">Pas</button>
-        <button type="button" data-z="50" aria-pressed="false">50%</button>
-        <button type="button" data-z="75" aria-pressed="false">75%</button>
-        <button type="button" data-z="100" aria-pressed="false">100%</button>
-      </div>
+      <span class="ctl row">
+        <button class="ibtn js-rot" type="button">Putar</button>
+        <div class="zoom js-zoom" role="group" aria-label="Zoom">
+          <button type="button" data-z="fit" aria-pressed="true">Pas</button>
+          <button type="button" data-z="50" aria-pressed="false">50%</button>
+          <button type="button" data-z="75" aria-pressed="false">75%</button>
+          <button type="button" data-z="100" aria-pressed="false">100%</button>
+        </div>
+      </span>
     </div>
+    <nav class="mnav" aria-label="Menu">
+      <button type="button" data-s="dev" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>Perangkat</button>
+      <button type="button" data-s="src" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"/></svg>Sumber</button>
+      <button type="button" data-s="set" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>Atur</button>
+    </nav>
   </section>
-  <aside class="panel">
+  <div class="scrim" id="scrim"></div>
+  <aside class="panel" id="panel">
+    <div class="shead"><b id="stitle"></b><button class="ibtn" id="sclose" type="button">Lihat hasil</button></div>
     <div class="head">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect x="2" y="4" width="24" height="17" rx="3" stroke="var(--ink)" stroke-width="2"/><rect x="9" y="22.5" width="10" height="2.5" rx="1.2" fill="var(--accent)"/><rect x="6" y="8" width="10" height="2" rx="1" fill="var(--accent)"/></svg>
       <b>Screen Web</b><span class="sp"></span>
-      <button class="ibtn" id="theme" type="button">Tema</button>
+      <button class="ibtn js-theme" type="button">Tema</button>
     </div>
-    <div class="sec">
+    <div class="sec s-src">
       <div class="tabs" role="tablist" aria-label="Sumber halaman" style="justify-self:start">
         <button role="tab" id="t-url" aria-selected="true" data-tab="url">Tautan</button>
         <button role="tab" id="t-code" aria-selected="false" data-tab="code">Kode</button>
@@ -198,15 +248,26 @@ header b{font-size:20px;letter-spacing:-.01em}nav{display:flex;gap:22px;font-siz
         <p class="hint">File dibaca di browser Anda. Gambar dan CSS terpisah tidak ikut dimuat, jadi gabungkan dalam satu file.</p>
       </div>
     </div>
-    <div class="sec">
+    <div class="sec s-dev">
       <div class="lab">Cari perangkat</div>
-      <input class="field" id="q" type="search" placeholder="Contoh: vivo Y81, Reno, Galaxy A" aria-label="Cari perangkat" style="font-family:var(--body);font-size:14px">
+      <input class="field" id="q" type="search" placeholder="Contoh: vivo Y81, Reno, Galaxy A" aria-label="Cari perangkat">
       <div class="lab">Handphone</div>
       <div class="chips" id="chips-hp"></div>
       <div class="lab">Perangkat lain</div>
       <div class="chips" id="chips-ot"></div>
     </div>
-    <div class="sec" id="list"></div>
+    <div class="sec s-dev" id="list"></div>
+    <div class="sec s-set">
+      <div class="lab">Arah layar</div>
+      <button class="ibtn js-rot" type="button">Putar potret / lanskap</button>
+      <div class="lab">Zoom pratinjau</div>
+      <div class="zoom js-zoom" role="group" aria-label="Zoom">
+        <button type="button" data-z="fit" aria-pressed="true">Pas</button>
+        <button type="button" data-z="50" aria-pressed="false">50%</button>
+        <button type="button" data-z="75" aria-pressed="false">75%</button>
+        <button type="button" data-z="100" aria-pressed="false">100%</button>
+      </div>
+    </div>
     <div class="credit"><b>Hijrah Abdur Rahman</b>Pembuat Screen Web. Ukuran layar handphone adalah perkiraan viewport CSS.</div>
   </aside>
 </div>
@@ -296,7 +357,7 @@ header b{font-size:20px;letter-spacing:-.01em}nav{display:flex;gap:22px;font-siz
     b.setAttribute('aria-pressed',String(d===st.dev));
     b.innerHTML='<span></span>'+(d.g==='custom'?'':'<small>'+d.w+' × '+d.h+'</small>');
     b.firstChild.textContent=d.n;
-    b.addEventListener('click',function(){st.dev=d;st.land=false;render();list()});
+    b.addEventListener('click',function(){st.dev=d;st.land=false;render();list();if(window.__closeSheet)window.__closeSheet()});
     return b;
   }
 
@@ -367,8 +428,8 @@ header b{font-size:20px;letter-spacing:-.01em}nav{display:flex;gap:22px;font-siz
     var can=st.dev.g==='phone'||st.dev.g==='tablet';
     $('sname').textContent=st.dev.n;
     $('sdim').textContent=r.vw+' × '+r.vh+' px'+(can?(r.L?' · Lanskap':' · Potret'):'');
-    $('rot').disabled=!can;
-    document.querySelectorAll('#zoom button').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.z===st.zoom))});
+    document.querySelectorAll('.js-rot').forEach(function(b){b.disabled=!can});
+    document.querySelectorAll('.js-zoom button').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.z===st.zoom))});
     loadSource();fit();
   }
 
@@ -388,6 +449,7 @@ header b{font-size:20px;letter-spacing:-.01em}nav{display:flex;gap:22px;font-siz
     if(!/^https?:\/\//i.test(v))v='https://'+v;
     try{var u=new URL(v);if(u.protocol!=='http:'&&u.protocol!=='https:')throw 0;st.url=u.href}catch(e){toast('Alamat tidak valid');return}
     st.mode='url';loadSource();
+    if(window.__closeSheet)window.__closeSheet();
   }
   $('go').addEventListener('click',go);
   $('url').addEventListener('keydown',function(e){if(e.key==='Enter')go()});
@@ -404,7 +466,7 @@ header b{font-size:20px;letter-spacing:-.01em}nav{display:flex;gap:22px;font-siz
   function readFile(f){
     if(!f)return;
     var r=new FileReader();
-    r.onload=function(){st.html=String(r.result);st.mode='html';code.value=st.html;$('fname').textContent=f.name;loadSource()};
+    r.onload=function(){st.html=String(r.result);st.mode='html';code.value=st.html;$('fname').textContent=f.name;loadSource();if(window.__closeSheet)window.__closeSheet()};
     r.readAsText(f);
   }
   $('pick').addEventListener('click',function(){$('file').click()});
@@ -415,16 +477,33 @@ header b{font-size:20px;letter-spacing:-.01em}nav{display:flex;gap:22px;font-siz
   $('drop').addEventListener('drop',function(e){e.preventDefault();readFile(e.dataTransfer.files[0])});
 
   $('q').addEventListener('input',function(){st.q=$('q').value;chips();list()});
-  $('rot').addEventListener('click',function(){st.land=!st.land;render()});
-  document.querySelectorAll('#zoom button').forEach(function(b){b.addEventListener('click',function(){st.zoom=b.dataset.z;document.querySelectorAll('#zoom button').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});fit()})});
+  document.querySelectorAll('.js-rot').forEach(function(b){b.addEventListener('click',function(){st.land=!st.land;render()})});
+  document.querySelectorAll('.js-zoom button').forEach(function(b){b.addEventListener('click',function(){
+    st.zoom=b.dataset.z;
+    document.querySelectorAll('.js-zoom button').forEach(function(x){x.setAttribute('aria-pressed',String(x.dataset.z===st.zoom))});
+    fit();
+  })});
   if(window.ResizeObserver)new ResizeObserver(fit).observe(stage);else window.addEventListener('resize',fit);
 
   function applyTheme(t){if(t)document.documentElement.setAttribute('data-theme',t);else document.documentElement.removeAttribute('data-theme')}
   try{applyTheme(localStorage.getItem('sw-theme'))}catch(e){}
-  $('theme').addEventListener('click',function(){
+  document.querySelectorAll('.js-theme').forEach(function(tb){tb.addEventListener('click',function(){
     var cur=document.documentElement.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
     var n=cur==='dark'?'light':'dark';applyTheme(n);try{localStorage.setItem('sw-theme',n)}catch(e){}
-  });
+  })});
+
+  /* Handphone: menu bawah membuka lembar geser; memilih perangkat atau sumber menutupnya agar hasil langsung terlihat. */
+  var app=document.querySelector('.app'),TT={dev:'Perangkat',src:'Sumber halaman',set:'Pengaturan'};
+  function setSheet(n){
+    app.dataset.sheet=n||'';$('stitle').textContent=TT[n]||'';
+    document.querySelectorAll('.mnav button').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.s===n))});
+  }
+  function closeSheet(){setSheet('')}
+  document.querySelectorAll('.mnav button').forEach(function(b){b.addEventListener('click',function(){setSheet(app.dataset.sheet===b.dataset.s?'':b.dataset.s)})});
+  $('scrim').addEventListener('click',closeSheet);
+  $('sclose').addEventListener('click',closeSheet);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheet()});
+  window.__closeSheet=closeSheet;
 
   chips();list();render();
 })();
