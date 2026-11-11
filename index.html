@@ -125,17 +125,17 @@ textarea{width:100%;height:120px;resize:vertical;border:1px solid var(--line);ba
 /* Handphone: kontrol di atas dan pratinjau di bawah seperti website biasa. */
 @media (max-width:900px){
   html,body{height:auto;min-height:100%;overflow:auto}
-  .app{height:auto;min-height:100dvh;display:flex;flex-direction:column}
-  .panel{order:0;display:flex;position:relative;inset:auto;max-height:none;overflow:visible;
+  .app{width:100%;height:auto;min-height:100dvh;display:flex;flex-direction:column;align-items:stretch}
+  .panel{order:0;display:flex;flex:0 0 auto;width:100%;min-width:0;box-sizing:border-box;position:relative;inset:auto;max-height:none;overflow:visible;
     border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;
     transform:none;visibility:visible;transition:none}
   .panel .head{display:flex}
   .panel .credit{display:block}
   .panel .s-src,.panel .s-dev,.panel .s-set{display:grid}
   .panel .shead,.scrim,.mnav{display:none!important}
-  .view{order:1;display:flex;flex-direction:column;min-height:75dvh;flex:none}
+  .view{order:1;display:flex;flex:0 0 auto;flex-direction:column;width:100%;min-width:0;min-height:75dvh;box-sizing:border-box}
   .mtop{display:none}
-  .stage{flex:none;min-height:65dvh;padding:12px;overflow:auto}
+  .stage{width:100%;box-sizing:border-box;flex:none;min-height:65dvh;padding:12px;overflow:auto;justify-content:center}
   .status{padding:10px 14px;gap:6px 10px}
   .status .ctl{display:flex;flex-wrap:wrap}
   .zoom{display:flex}
