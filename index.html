@@ -3,7 +3,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: sidebar daftar perangkat + panel sumber di atas + meja gambar berpola titik di tengah + bilah status. */
+/* Layout: meja pratinjau besar di kiri (perangkat tampil sebesar mungkin), panel kontrol di kanan: sumber halaman, merek, daftar seri. */
 :root{
   --bg:#EDEFF2; --panel:#F7F8FA; --ink:#14181D; --muted:#5B6571; --line:#D5DAE0;
   --accent:#2A56E8; --accent-ink:#FFFFFF; --soft:#E3E8F6;
@@ -23,53 +23,55 @@
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 var(--body);
-  padding-block:0;padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px))}
+  padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px))}
 button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.app{height:100%;display:grid;grid-template-columns:268px minmax(0,1fr)}
-.side{display:flex;flex-direction:column;min-height:0;background:var(--panel);border-right:1px solid var(--line)}
-.brand{display:flex;align-items:center;gap:10px;padding:18px 18px 14px}
-.brand svg{flex:none}
-.brand b{font:700 20px/1 var(--display);letter-spacing:-.01em}
-.list{flex:1;overflow:auto;padding:4px 10px 12px;min-height:0}
-.grp{margin-bottom:10px}
-.glabel{display:flex;align-items:center;gap:8px;padding:8px 8px 4px;color:var(--muted);font-size:12px;font-weight:600}
-.dv{display:flex;width:100%;justify-content:space-between;align-items:baseline;gap:8px;border:0;background:none;text-align:left;
-  padding:7px 8px;border-radius:6px;color:var(--ink)}
-.dv:hover{background:var(--bg)}
-.dv[aria-pressed="true"]{background:var(--soft);font-weight:600}
-.dv small{font:400 11.5px var(--mono);color:var(--muted);white-space:nowrap}
-.custom{display:flex;gap:6px;align-items:center;padding:4px 8px 0}
-.custom input{width:100%;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:6px 8px;font:500 12.5px var(--mono)}
-.credit{padding:12px 18px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px}
-.credit b{display:block;color:var(--ink);font-weight:600;font-size:13.5px}
-.main{display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-width:0;min-height:0}
-.bar{background:var(--panel);border-bottom:1px solid var(--line);padding:10px 16px;display:grid;gap:10px}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.app{height:100%;display:grid;grid-template-columns:minmax(0,1fr) 420px}
+.view{display:grid;grid-template-rows:minmax(0,1fr) auto;min-width:0;min-height:0}
+.stage{overflow:auto;display:flex;padding:20px;background:var(--stage);background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:20px 20px;min-height:0}
+.scaler{position:relative;margin:auto;flex:none}
+.status{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:8px 16px;background:var(--panel);border-top:1px solid var(--line);font-size:13px}
+.status .m{font:500 12.5px var(--mono)}
+.mut{color:var(--muted)}
+.sp{flex:1}
+.ibtn{border:1px solid var(--line);background:var(--panel);border-radius:7px;padding:5px 10px;font-weight:500}
+.ibtn:disabled{opacity:.4;cursor:not-allowed}
+.zoom{display:inline-flex}
+.zoom button{border:1px solid var(--line);background:var(--panel);padding:5px 9px;font:500 12px var(--mono);margin-left:-1px}
+.zoom button:first-child{border-radius:7px 0 0 7px;margin-left:0}.zoom button:last-child{border-radius:0 7px 7px 0}
+.zoom button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink);position:relative}
+.panel{display:flex;flex-direction:column;min-height:0;overflow:auto;background:var(--panel);border-left:1px solid var(--line)}
+.head{display:flex;align-items:center;gap:10px;padding:16px 18px 12px}
+.head b{font:700 20px/1 var(--display);letter-spacing:-.01em}
+.sec{padding:12px 18px;border-top:1px solid var(--line);display:grid;gap:10px}
+.lab{font-weight:600;font-size:12.5px;color:var(--muted)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .tabs{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:2px}
 .tabs button{border:0;background:none;padding:6px 14px;border-radius:6px;font-weight:500;color:var(--muted)}
 .tabs button[aria-selected="true"]{background:var(--panel);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
-.sp{flex:1}
 .btn{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:7px 13px;font-weight:500}
 .btn:hover{border-color:var(--muted)}
 .btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-.url{flex:1;min-width:200px;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 12px;font:13px var(--mono)}
-.hint{color:var(--muted);font-size:12.5px;margin:0;max-width:78ch}
-textarea{width:100%;height:150px;resize:vertical;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:10px 12px;font:12.5px/1.5 var(--mono);tab-size:2}
-.drop{flex:1;min-width:220px;border:1.5px dashed var(--line);border-radius:8px;padding:10px 14px;color:var(--muted);display:flex;gap:10px;align-items:center}
+.field{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 12px;font:13px var(--mono)}
+.hint{color:var(--muted);font-size:12.5px;margin:0}
+textarea{width:100%;height:120px;resize:vertical;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:10px 12px;font:12.5px/1.5 var(--mono);tab-size:2}
+.drop{flex:1;min-width:0;border:1.5px dashed var(--line);border-radius:8px;padding:10px 12px;color:var(--muted);display:block;overflow-wrap:anywhere}
 .drop.on{border-color:var(--accent);color:var(--ink)}
-.stage{overflow:auto;display:flex;padding:32px;background:var(--stage);background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:20px 20px;min-height:0}
-.scaler{position:relative;margin:auto;flex:none}
-.status{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:8px 16px;background:var(--panel);border-top:1px solid var(--line);font-size:13px}
-.status .m{font:500 12.5px var(--mono)}
-.status .mut{color:var(--muted)}
-.ibtn{border:1px solid var(--line);background:var(--panel);border-radius:7px;padding:5px 10px;font-weight:500;display:inline-flex;gap:6px;align-items:center}
-.zoom{display:inline-flex;gap:2px}
-.zoom button{border:1px solid var(--line);background:var(--panel);padding:5px 9px;font:500 12px var(--mono)}
-.zoom button:first-child{border-radius:7px 0 0 7px}.zoom button:last-child{border-radius:0 7px 7px 0}
-.zoom button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:5px 12px;font-weight:500;font-size:13px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.series{margin:0 0 4px;font-weight:600;font-size:12.5px;color:var(--muted);padding-top:6px}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.dv{display:flex;flex-direction:column;align-items:flex-start;gap:1px;border:1px solid var(--line);background:var(--bg);text-align:left;padding:7px 10px;border-radius:8px;min-width:0}
+.dv:hover{border-color:var(--muted)}
+.dv[aria-pressed="true"]{background:var(--soft);border-color:var(--accent);font-weight:600}
+.dv span{max-width:100%;overflow-wrap:anywhere}
+.dv small{font:400 11.5px var(--mono);color:var(--muted)}
+.custom{display:flex;gap:6px;align-items:center}
+.custom .field{text-align:center}
+.credit{margin-top:auto;padding:12px 18px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px}
+.credit b{display:block;color:var(--ink);font-weight:600;font-size:13.5px}
 .toast{position:fixed;left:50%;bottom:calc(60px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-weight:500;z-index:20}
 /* perangkat */
 .dev{position:absolute;left:0;top:0;transform-origin:0 0;display:inline-flex;flex-direction:column;align-items:center}
@@ -81,49 +83,47 @@ textarea{width:100%;height:150px;resize:vertical;border:1px solid var(--line);ba
 .k-island .scr,.k-punch .scr{border-radius:46px}
 .k-island .island{top:22px;left:50%;width:112px;height:32px;margin-left:-56px;border-radius:20px}
 .k-punch .punch{top:24px;left:50%;width:16px;height:16px;margin-left:-8px;border-radius:50%}
-.k-island .home,.k-punch .home{bottom:20px;left:50%;width:136px;height:5px;margin-left:-68px;border-radius:3px;background:rgba(0,0,0,.55);mix-blend-mode:normal}
+.k-island .home,.k-punch .home{bottom:20px;left:50%;width:136px;height:5px;margin-left:-68px;border-radius:3px;background:rgba(0,0,0,.55)}
 .k-island .lid::before,.k-punch .lid::before{content:"";position:absolute;right:-3px;top:18%;width:3px;height:9%;background:var(--hw);border-radius:0 3px 3px 0}
 .k-island .lid::after,.k-punch .lid::after{content:"";position:absolute;left:-3px;top:15%;width:3px;height:16%;background:var(--hw);border-radius:3px 0 0 3px}
+.k-notch .lid,.k-drop .lid{padding:12px;border-radius:46px}
+.k-notch .scr,.k-drop .scr{border-radius:34px}
+.k-notch .nt{top:12px;left:50%;width:160px;height:28px;margin-left:-80px;border-radius:0 0 18px 18px}
+.k-drop .dp{top:12px;left:50%;width:62px;height:22px;margin-left:-31px;border-radius:0 0 14px 14px}
+.k-notch .lid::before,.k-drop .lid::before{content:"";position:absolute;right:-3px;top:20%;width:3px;height:10%;background:var(--hw);border-radius:0 3px 3px 0}
 .k-home .lid{padding:66px 14px;border-radius:46px}
 .k-home .scr{border-radius:3px}
-.k-home .spk{top:30px;left:50%;width:58px;height:6px;margin-left:-29px;border-radius:3px;background:#000}
+.k-home .spk{top:30px;left:50%;width:58px;height:6px;margin-left:-29px;border-radius:3px}
 .k-home .hbtn{bottom:14px;left:50%;width:40px;height:40px;margin-left:-20px;border-radius:50%;background:none;border:2px solid rgba(255,255,255,.22)}
 .k-tab .lid{padding:20px;border-radius:40px}
 .k-tab .scr{border-radius:18px}
 .k-tab .cam{top:7px;left:50%;width:8px;height:8px;margin-left:-4px;border-radius:50%}
 .land.k-tab .cam{top:50%;left:7px;margin:-4px 0 0}
-.land.k-island .island,.land.k-punch .island,.land.k-punch .punch{top:50%;left:22px;margin:0;transform:translateY(-50%)}
+.land.k-island .island,.land.k-punch .punch{top:50%;left:22px;margin:0;transform:translateY(-50%)}
 .land.k-island .island{width:32px;height:112px}
 .land.k-island .home,.land.k-punch .home{bottom:16px}
-.land.k-island .lid::before,.land.k-island .lid::after,.land.k-punch .lid::before,.land.k-punch .lid::after{display:none}
+.land.k-island .lid::before,.land.k-island .lid::after,.land.k-punch .lid::before,.land.k-punch .lid::after,.land.k-notch .lid::before,.land.k-drop .lid::before{display:none}
+.land.k-notch .nt{top:50%;left:12px;width:28px;height:160px;margin:-80px 0 0;border-radius:0 18px 18px 0}
+.land.k-drop .dp{top:50%;left:12px;width:22px;height:62px;margin:-31px 0 0;border-radius:0 14px 14px 0}
 .land.k-home .lid{padding:14px 66px}
 .land.k-home .spk{top:50%;left:30px;width:6px;height:58px;margin:-29px 0 0}
 .land.k-home .hbtn{bottom:auto;top:50%;left:auto;right:14px;margin:-20px 0 0}
 .k-lap .lid{padding:14px 14px 18px;border-radius:20px 20px 4px 4px}
-.k-lap .scr{border-radius:3px}
+.k-lap .scr,.k-mon .scr{border-radius:3px}
 .k-lap .cam{top:5px;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%}
 .base{position:relative;height:16px;margin-top:-1px;background:linear-gradient(var(--silver),var(--silver-d));border-radius:0 0 22px 22px;box-shadow:0 18px 30px -14px rgba(0,0,0,.5)}
 .base::before{content:"";position:absolute;top:0;left:50%;width:16%;height:6px;margin-left:-8%;background:var(--silver-d);border-radius:0 0 10px 10px}
 .k-mon .lid{padding:14px 14px 38px;border-radius:16px}
-.k-mon .scr{border-radius:3px}
 .neck{width:150px;height:90px;margin-top:-1px;background:linear-gradient(90deg,var(--silver-d),var(--silver) 40%,var(--silver-d))}
 .foot{width:320px;height:12px;background:linear-gradient(var(--silver),var(--silver-d));border-radius:6px;box-shadow:0 18px 30px -14px rgba(0,0,0,.5)}
 .k-bare .lid{padding:6px;border-radius:12px}
 .k-bare .scr{border-radius:6px}
-@media (max-width:820px){
+@media (max-width:900px){
   html,body{height:auto}
   .app{height:auto;display:block}
-  .side{border-right:0;border-bottom:1px solid var(--line)}
-  .brand{padding:14px 16px 8px}
-  .list{display:flex;overflow-x:auto;gap:6px;padding:0 16px 12px;flex:none}
-  .grp{display:contents}
-  .glabel{display:none}
-  .dv{width:auto;flex:none;border:1px solid var(--line);background:var(--bg);gap:8px}
-  .dv[aria-pressed="true"]{border-color:var(--accent)}
-  .custom{flex:none;padding:0}
-  .credit{display:none}
-  .stage{height:68vh;padding:20px 12px}
-  .bar{padding:10px 16px}
+  .view{display:block}
+  .stage{height:80vh;padding:14px 8px}
+  .panel{border-left:0;border-top:1px solid var(--line);overflow:visible}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -156,41 +156,7 @@ header b{font-size:20px;letter-spacing:-.01em}nav{display:flex;gap:22px;font-siz
 </section></body></html></script>
 
 <div class="app">
-  <aside class="side">
-    <div class="brand">
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect x="2" y="4" width="24" height="17" rx="3" stroke="var(--ink)" stroke-width="2"/><rect x="9" y="22.5" width="10" height="2.5" rx="1.2" fill="var(--accent)"/><rect x="6" y="8" width="10" height="2" rx="1" fill="var(--accent)"/></svg>
-      <b>Screen Web</b>
-    </div>
-    <div class="list" id="list"></div>
-    <div class="credit"><b>Hijrah Abdur Rahman</b>Pembuat Screen Web</div>
-  </aside>
-  <section class="main">
-    <div class="bar">
-      <div class="row">
-        <div class="tabs" role="tablist" aria-label="Sumber halaman">
-          <button role="tab" id="t-url" aria-selected="true" data-tab="url">Tautan</button>
-          <button role="tab" id="t-code" aria-selected="false" data-tab="code">Kode</button>
-          <button role="tab" id="t-file" aria-selected="false" data-tab="file">File</button>
-        </div>
-        <span class="sp"></span>
-        <button class="ibtn" id="theme" type="button">Tema</button>
-      </div>
-      <div id="p-url" class="row">
-        <input class="url" id="url" type="url" inputmode="url" placeholder="https://contoh.com" aria-label="Alamat website">
-        <button class="btn pri" id="go" type="button">Tampilkan</button>
-        <p class="hint">Banyak situs besar menolak dibuka di dalam frame. Jika layar tetap kosong, tempel kodenya atau unggah file HTML-nya.</p>
-      </div>
-      <div id="p-code" hidden>
-        <textarea id="code" spellcheck="false" aria-label="Kode HTML"></textarea>
-        <div class="row" style="margin-top:8px"><button class="btn" id="copy" type="button">Salin kode</button><button class="btn" id="sample-btn" type="button">Pakai contoh</button><p class="hint">Pratinjau diperbarui saat Anda mengetik.</p></div>
-      </div>
-      <div id="p-file" class="row" hidden>
-        <label class="drop" id="drop"><span id="fname">Tarik file .html ke sini, atau pilih dari perangkat.</span></label>
-        <input id="file" type="file" accept=".html,.htm,.txt,text/html" hidden>
-        <button class="btn" id="pick" type="button">Pilih file</button>
-        <p class="hint">File dibaca di browser Anda. Gambar dan CSS terpisah tidak ikut dimuat, jadi gabungkan dalam satu file.</p>
-      </div>
-    </div>
+  <section class="view">
     <div class="stage" id="stage"><div class="scaler" id="scaler"></div></div>
     <div class="status">
       <span><b id="sname"></b> <span class="m" id="sdim"></span></span>
@@ -205,75 +171,171 @@ header b{font-size:20px;letter-spacing:-.01em}nav{display:flex;gap:22px;font-siz
       </div>
     </div>
   </section>
+  <aside class="panel">
+    <div class="head">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect x="2" y="4" width="24" height="17" rx="3" stroke="var(--ink)" stroke-width="2"/><rect x="9" y="22.5" width="10" height="2.5" rx="1.2" fill="var(--accent)"/><rect x="6" y="8" width="10" height="2" rx="1" fill="var(--accent)"/></svg>
+      <b>Screen Web</b><span class="sp"></span>
+      <button class="ibtn" id="theme" type="button">Tema</button>
+    </div>
+    <div class="sec">
+      <div class="tabs" role="tablist" aria-label="Sumber halaman" style="justify-self:start">
+        <button role="tab" id="t-url" aria-selected="true" data-tab="url">Tautan</button>
+        <button role="tab" id="t-code" aria-selected="false" data-tab="code">Kode</button>
+        <button role="tab" id="t-file" aria-selected="false" data-tab="file">File</button>
+      </div>
+      <div id="p-url" style="display:grid;gap:8px">
+        <div class="row"><input class="field" id="url" type="url" inputmode="url" placeholder="https://contoh.com" aria-label="Alamat website"><button class="btn pri" id="go" type="button">Tampilkan</button></div>
+        <p class="hint">Sebagian situs menolak dibuka di dalam frame. Jika layar kosong, tempel kodenya atau unggah file HTML-nya.</p>
+      </div>
+      <div id="p-code" hidden style="display:grid;gap:8px">
+        <textarea id="code" spellcheck="false" aria-label="Kode HTML"></textarea>
+        <div class="row"><button class="btn" id="copy" type="button">Salin kode</button><button class="btn" id="sample-btn" type="button">Pakai contoh</button></div>
+        <p class="hint">Pratinjau berubah saat Anda mengetik.</p>
+      </div>
+      <div id="p-file" hidden style="display:grid;gap:8px">
+        <div class="row"><label class="drop" id="drop"><span id="fname">Tarik file .html ke sini</span></label><button class="btn" id="pick" type="button">Pilih file</button></div>
+        <input id="file" type="file" accept=".html,.htm,.txt,text/html" hidden>
+        <p class="hint">File dibaca di browser Anda. Gambar dan CSS terpisah tidak ikut dimuat, jadi gabungkan dalam satu file.</p>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="lab">Cari perangkat</div>
+      <input class="field" id="q" type="search" placeholder="Contoh: vivo Y81, Reno, Galaxy A" aria-label="Cari perangkat" style="font-family:var(--body);font-size:14px">
+      <div class="lab">Handphone</div>
+      <div class="chips" id="chips-hp"></div>
+      <div class="lab">Perangkat lain</div>
+      <div class="chips" id="chips-ot"></div>
+    </div>
+    <div class="sec" id="list"></div>
+    <div class="credit"><b>Hijrah Abdur Rahman</b>Pembuat Screen Web. Ukuran layar handphone adalah perkiraan viewport CSS.</div>
+  </aside>
 </div>
 <div class="toast" id="toast" hidden></div>
 
 <script>
 (function(){
-  var D=[
-    {id:'iphone16',g:'phone',n:'iPhone 16',w:393,h:852,k:'island'},
-    {id:'iphonese',g:'phone',n:'iPhone SE',w:375,h:667,k:'home'},
-    {id:'pixel9',g:'phone',n:'Pixel 9',w:412,h:915,k:'punch'},
-    {id:'s24',g:'phone',n:'Galaxy S24',w:360,h:780,k:'punch'},
-    {id:'ipadmini',g:'tablet',n:'iPad mini',w:744,h:1133,k:'tab'},
-    {id:'ipad11',g:'tablet',n:'iPad Pro 11"',w:834,h:1194,k:'tab'},
-    {id:'ipad13',g:'tablet',n:'iPad Pro 13"',w:1032,h:1376,k:'tab'},
-    {id:'surface',g:'tablet',n:'Surface Pro',w:912,h:1368,k:'tab'},
-    {id:'mba',g:'laptop',n:'MacBook Air 13"',w:1440,h:900,k:'lap'},
-    {id:'mbp',g:'laptop',n:'MacBook Pro 16"',w:1728,h:1117,k:'lap'},
-    {id:'hd',g:'laptop',n:'Laptop HD',w:1366,h:768,k:'lap'},
-    {id:'fhd',g:'monitor',n:'Monitor Full HD',w:1920,h:1080,k:'mon'},
-    {id:'qhd',g:'monitor',n:'Monitor QHD',w:2560,h:1440,k:'mon'},
-    {id:'imac',g:'monitor',n:'iMac 24"',w:2240,h:1260,k:'mon'},
-    {id:'uw',g:'monitor',n:'Ultrawide',w:2560,h:1080,k:'mon'},
-    {id:'custom',g:'custom',n:'Ukuran bebas',w:1024,h:768,k:'bare'}
+  /* S(seri, awalan nama, [lebar, tinggi, tipe layar], 'nama;nama:lebar:tinggi:tipe;...') */
+  function S(n,pre,def,rows){
+    return {n:n,items:rows.split(';').map(function(r){
+      var p=r.split(':');
+      return {n:pre+p[0],w:+p[1]||def[0],h:+p[2]||def[1],k:p[3]||def[2]};
+    })};
+  }
+  var BR=[
+    {id:'iphone',n:'iPhone',hp:1,s:[
+      S('iPhone 16','iPhone ',[393,852,'island'],'16 Pro Max:440:956;16 Pro:402:874;16 Plus:430:932;16;16e:390:844:notch'),
+      S('iPhone 15','iPhone ',[393,852,'island'],'15 Pro Max:430:932;15 Pro;15 Plus:430:932;15'),
+      S('iPhone 14','iPhone ',[390,844,'notch'],'14 Pro Max:430:932:island;14 Pro:393:852:island;14 Plus:428:926;14'),
+      S('iPhone 13','iPhone ',[390,844,'notch'],'13 Pro Max:428:926;13 Pro;13;13 mini:375:812'),
+      S('iPhone 12','iPhone ',[390,844,'notch'],'12 Pro Max:428:926;12 Pro;12;12 mini:375:812'),
+      S('iPhone 11 dan X','iPhone ',[414,896,'notch'],'11 Pro Max;11;11 Pro:375:812;XS Max;XR;X:375:812'),
+      S('iPhone SE dan 8','iPhone ',[375,667,'home'],'SE (2022);SE (2020);8 Plus:414:736;8;7')]},
+    {id:'samsung',n:'Samsung',hp:1,s:[
+      S('Galaxy S','Galaxy ',[360,780,'punch'],'S25 Ultra:384:824;S25+:384:832;S25;S24 Ultra:384:824;S24+:384:832;S24;S23 Ultra:384:824;S23;S22;S21:360:800'),
+      S('Galaxy A','Galaxy ',[360,800,'punch'],'A56;A55 5G:360:780;A54 5G;A35 5G:360:780;A34 5G;A25 5G;A15;A14;A05:360:800:drop;A04:360:800:drop'),
+      S('Galaxy M','Galaxy ',[360,800,'punch'],'M55;M54;M34 5G;M14 5G'),
+      S('Galaxy Z (lipat)','Galaxy ',[412,914,'punch'],'Z Flip6;Z Flip5;Z Fold6:882:1104;Z Fold5:882:1104')]},
+    {id:'vivo',n:'Vivo',hp:1,s:[
+      S('Seri Y','vivo ',[360,800,'drop'],'Y81:360:760:notch;Y83:360:760:notch;Y85:360:760:notch;Y91:360:760;Y12:360:772;Y15:360:772;Y17:360:780;Y20;Y21;Y22;Y27;Y28;Y36;Y100:360:800:punch'),
+      S('Seri V','vivo ',[360,800,'punch'],'V17 Pro;V19;V20:360:800:drop;V21;V23;V25;V27;V29;V30;V40'),
+      S('Seri X','vivo ',[360,800,'punch'],'X60 Pro;X70 Pro;X80 Pro;X90 Pro;X100 Pro;X200 Pro'),
+      S('Seri T dan iQOO','vivo ',[360,800,'punch'],'T1 5G;T2 5G;T3 5G;iQOO Neo9;iQOO 12')]},
+    {id:'oppo',n:'OPPO',hp:1,s:[
+      S('Seri Reno','OPPO ',[360,800,'punch'],'Reno5;Reno6;Reno7;Reno8;Reno10;Reno11;Reno12;Reno13'),
+      S('Seri A','OPPO ',[360,800,'drop'],'A15;A16;A17;A18;A38;A57;A58:360:800:punch;A78:360:800:punch;A79 5G:360:800:punch'),
+      S('Seri Find','OPPO ',[360,800,'punch'],'Find X5 Pro;Find X7 Ultra;Find X8 Pro')]},
+    {id:'xiaomi',n:'Xiaomi',hp:1,s:[
+      S('Xiaomi','Xiaomi ',[360,800,'punch'],'15;14;13T;13'),
+      S('Redmi Note','Redmi ',[360,800,'punch'],'Note 14 Pro;Note 13 Pro;Note 12;Note 11;Note 10'),
+      S('Redmi','Redmi ',[360,800,'drop'],'13C;12C;A3;10'),
+      S('POCO','POCO ',[360,800,'punch'],'F6;X6 Pro;M6;X5')]},
+    {id:'realme',n:'realme',hp:1,s:[
+      S('Seri Angka','realme ',[360,800,'punch'],'13 Pro;12 Pro;11 Pro;10 Pro'),
+      S('Seri C','realme ',[360,800,'drop'],'C67;C65;C55;C53;C35'),
+      S('Narzo','realme ',[360,800,'punch'],'Narzo 70;Narzo 60')]},
+    {id:'infinix',n:'Infinix',hp:1,s:[
+      S('Infinix','Infinix ',[360,800,'punch'],'Hot 50;Hot 40;Note 40;Zero 40;Smart 8:360:800:drop')]},
+    {id:'tecno',n:'TECNO',hp:1,s:[
+      S('TECNO','TECNO ',[360,800,'punch'],'Spark 20;Camon 30;Pova 6;Phantom X2')]},
+    {id:'pixel',n:'Pixel',hp:1,s:[
+      S('Google Pixel','Pixel ',[412,915,'punch'],'9 Pro XL;9 Pro:412:923;9:412:923;8 Pro;8;7a;7;6a')]},
+    {id:'oneplus',n:'OnePlus',hp:1,s:[
+      S('OnePlus','OnePlus ',[412,915,'punch'],'13;12;12R;Nord 4;Nord CE4')]},
+    {id:'lain',n:'Lainnya',hp:1,s:[
+      S('Merek lain','',[412,915,'punch'],'Honor Magic6;Huawei Pura 70;Nothing Phone (2);ROG Phone 8;Motorola Edge 50;Sony Xperia 1 VI')]},
+    {id:'tablet',n:'Tablet',s:[S('','',[834,1194,'tab'],'iPad mini:744:1133;iPad Pro 11":834:1194;iPad Pro 13":1032:1376;iPad Air 11":820:1180;Galaxy Tab S9:800:1280;Surface Pro:912:1368')]},
+    {id:'laptop',n:'Laptop',s:[S('','',[1440,900,'lap'],'MacBook Air 13":1440:900;MacBook Pro 14":1512:982;MacBook Pro 16":1728:1117;Laptop HD:1366:768;Laptop Full HD:1536:864')]},
+    {id:'monitor',n:'Monitor',s:[S('','',[1920,1080,'mon'],'Monitor Full HD:1920:1080;Monitor QHD:2560:1440;iMac 24":2240:1260;Ultrawide:2560:1080;Monitor 4K (skala 150%):2560:1440')]},
+    {id:'custom',n:'Ukuran bebas',s:[S('','',[1024,768,'bare'],'Ukuran bebas')]}
   ];
-  var GN={phone:'Handphone',tablet:'Tablet',laptop:'Laptop',monitor:'Monitor',custom:'Kustom'};
-  var IC={
-    phone:'<rect x="5" y="1.5" width="8" height="15" rx="2"/><path d="M8 14.5h2"/>',
-    tablet:'<rect x="2.5" y="2" width="13" height="14" rx="2"/><path d="M8 14h2"/>',
-    laptop:'<rect x="3.5" y="3.5" width="11" height="8" rx="1"/><path d="M1.5 14h15"/>',
-    monitor:'<rect x="2" y="2.5" width="14" height="9.5" rx="1"/><path d="M6.5 15.5h5M9 12v3.5"/>',
-    custom:'<path d="M3 6V3h3M12 3h3v3M15 12v3h-3M6 15H3v-3"/>'
-  };
+  var ALL=[],id=0;
+  BR.forEach(function(b){b.s.forEach(function(s){s.items.forEach(function(d){
+    d.id=++id;d.brand=b.id;d.bn=b.n;d.g=b.hp?'phone':b.id;ALL.push(d);
+  })})});
+  var st={dev:null,brand:'vivo',q:'',land:false,zoom:'fit',html:'',mode:'html',url:''};
+  ALL.forEach(function(d){if(d.n==='vivo Y81')st.dev=d});
   function $(i){return document.getElementById(i)}
-  var st={dev:D[0],land:false,zoom:'fit',html:$('sample').textContent.trim(),mode:'html',url:''};
+  st.html=$('sample').textContent.trim();
   var stage=$('stage'),scaler=$('scaler'),iframe=null,dev=null,dw=0,dh=0;
+  var norm=function(t){return t.toLowerCase().replace(/[\s"()]/g,'')};
 
-  function icon(g){return '<svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[g]+'</svg>'}
-
-  function buildList(){
-    var l=$('list');l.innerHTML='';
-    ['phone','tablet','laptop','monitor','custom'].forEach(function(g){
-      var box=document.createElement('div');box.className='grp';
-      box.innerHTML='<div class="glabel">'+icon(g)+GN[g]+'</div>';
-      D.filter(function(d){return d.g===g}).forEach(function(d){
-        var b=document.createElement('button');b.type='button';b.className='dv';b.dataset.id=d.id;
-        b.innerHTML='<span>'+d.n+'</span>'+(g==='custom'?'':'<small>'+d.w+'×'+d.h+'</small>');
-        b.addEventListener('click',function(){st.dev=d;st.land=false;render()});
-        box.appendChild(b);
-      });
-      if(g==='custom'){
-        var c=document.createElement('div');c.className='custom';
-        c.innerHTML='<input id="cw" type="number" min="280" max="4000" value="1024" aria-label="Lebar"><span>×</span><input id="ch" type="number" min="280" max="4000" value="768" aria-label="Tinggi">';
+  function chips(){
+    ['hp','ot'].forEach(function(t){
+      var box=$('chips-'+t);box.innerHTML='';
+      BR.filter(function(b){return t==='hp'?b.hp:!b.hp}).forEach(function(b){
+        var c=document.createElement('button');c.type='button';c.className='chip';c.textContent=b.n;c.dataset.b=b.id;
+        c.setAttribute('aria-pressed',String(!st.q&&b.id===st.brand));
+        c.addEventListener('click',function(){st.brand=b.id;st.q='';$('q').value='';chips();list()});
         box.appendChild(c);
-        c.addEventListener('input',function(){
-          var w=Math.min(4000,Math.max(280,+$('cw').value||1024)),h=Math.min(4000,Math.max(280,+$('ch').value||768));
-          var d=D[D.length-1];d.w=w;d.h=h;st.dev=d;render();
-        });
-      }
-      l.appendChild(box);
+      });
     });
+  }
+
+  function itemBtn(d){
+    var b=document.createElement('button');b.type='button';b.className='dv';
+    b.setAttribute('aria-pressed',String(d===st.dev));
+    b.innerHTML='<span></span>'+(d.g==='custom'?'':'<small>'+d.w+' × '+d.h+'</small>');
+    b.firstChild.textContent=d.n;
+    b.addEventListener('click',function(){st.dev=d;st.land=false;render();list()});
+    return b;
+  }
+
+  function list(){
+    var box=$('list');box.innerHTML='';
+    var groups;
+    if(st.q.trim()){
+      var q=norm(st.q);
+      var m=ALL.filter(function(d){return norm(d.n).indexOf(q)>-1||norm(d.bn).indexOf(q)>-1});
+      groups=[{n:m.length?'Hasil pencarian':'',items:m}];
+      if(!m.length){box.innerHTML='<p class="hint">Tidak ada perangkat yang cocok. Coba nama seri lain, atau pakai Ukuran bebas.</p>';return}
+    }else groups=BR.filter(function(b){return b.id===st.brand})[0].s;
+    groups.forEach(function(s){
+      if(s.n){var h=document.createElement('div');h.className='series';h.textContent=s.n;box.appendChild(h)}
+      var g=document.createElement('div');g.className='items';
+      s.items.forEach(function(d){g.appendChild(itemBtn(d))});
+      box.appendChild(g);
+    });
+    if(!st.q.trim()&&st.brand==='custom'){
+      var c=document.createElement('div');c.className='custom';
+      var cd=ALL[ALL.length-1];
+      c.innerHTML='<input class="field" id="cw" type="number" min="280" max="4000" value="'+cd.w+'" aria-label="Lebar"><span>×</span><input class="field" id="ch" type="number" min="280" max="4000" value="'+cd.h+'" aria-label="Tinggi">';
+      box.appendChild(c);
+      c.addEventListener('input',function(){
+        cd.w=Math.min(4000,Math.max(280,+$('cw').value||1024));cd.h=Math.min(4000,Math.max(280,+$('ch').value||768));
+        st.dev=cd;render();
+      });
+    }
   }
 
   function build(){
     var d=st.dev,L=st.land&&(d.g==='phone'||d.g==='tablet');
     var vw=L?d.h:d.w,vh=L?d.w:d.h,k=d.k;
     var deco={island:'<i class="island"></i><i class="home"></i>',punch:'<i class="punch"></i><i class="home"></i>',
+      notch:'<i class="nt"></i>',drop:'<i class="dp"></i>',
       home:'<i class="spk"></i><i class="hbtn"></i>',tab:'<i class="cam"></i>',lap:'<i class="cam"></i>',mon:'',bare:''}[k];
     var el=document.createElement('div');
     el.className='dev k-'+k+(L?' land':'');
-    el.innerHTML='<div class="lid"><div class="scr" style="width:'+vw+'px;height:'+vh+'px"><iframe title="Pratinjau '+d.n+'" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe></div>'+deco+'</div>';
+    el.innerHTML='<div class="lid"><div class="scr" style="width:'+vw+'px;height:'+vh+'px"><iframe title="Pratinjau" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe></div>'+deco+'</div>';
     if(k==='lap'){var b=document.createElement('div');b.className='base';b.style.width=Math.round((vw+28)*1.1)+'px';el.appendChild(b)}
     if(k==='mon'){el.insertAdjacentHTML('beforeend','<div class="neck"></div><div class="foot"></div>')}
     return {el:el,vw:vw,vh:vh,L:L};
@@ -290,8 +352,7 @@ header b{font-size:20px;letter-spacing:-.01em}nav{display:flex;gap:22px;font-siz
     var s;
     if(st.zoom==='fit'){
       var cs=getComputedStyle(stage),pw=parseFloat(cs.paddingLeft)*2,ph=parseFloat(cs.paddingTop)*2;
-      s=Math.min(1,(stage.clientWidth-pw)/dw,(stage.clientHeight-ph)/dh);
-      s=Math.max(.05,s);
+      s=Math.max(.05,Math.min(1,(stage.clientWidth-pw)/dw,(stage.clientHeight-ph)/dh));
     }else s=+st.zoom/100;
     dev.style.transform='scale('+s+')';
     scaler.style.width=Math.round(dw*s)+'px';scaler.style.height=Math.round(dh*s)+'px';
@@ -303,11 +364,10 @@ header b{font-size:20px;letter-spacing:-.01em}nav{display:flex;gap:22px;font-siz
     scaler.innerHTML='';scaler.appendChild(r.el);
     dev=r.el;iframe=dev.querySelector('iframe');
     dw=dev.offsetWidth;dh=dev.offsetHeight;
-    $('sname').textContent=st.dev.n;
-    $('sdim').textContent=r.vw+' × '+r.vh+' px'+(st.dev.g==='phone'||st.dev.g==='tablet'?(r.L?' · Lanskap':' · Potret'):'');
     var can=st.dev.g==='phone'||st.dev.g==='tablet';
+    $('sname').textContent=st.dev.n;
+    $('sdim').textContent=r.vw+' × '+r.vh+' px'+(can?(r.L?' · Lanskap':' · Potret'):'');
     $('rot').disabled=!can;
-    document.querySelectorAll('.dv').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.id===st.dev.id))});
     document.querySelectorAll('#zoom button').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.z===st.zoom))});
     loadSource();fit();
   }
@@ -316,10 +376,12 @@ header b{font-size:20px;letter-spacing:-.01em}nav{display:flex;gap:22px;font-siz
 
   function tab(n){
     ['url','code','file'].forEach(function(x){
-      $('t-'+x).setAttribute('aria-selected',String(x===n));$('p-'+x).hidden=x!==n;
+      $('t-'+x).setAttribute('aria-selected',String(x===n));
+      var p=$('p-'+x);p.hidden=x!==n;p.style.display=x===n?'grid':'none';
     });
   }
   document.querySelectorAll('.tabs button').forEach(function(b){b.addEventListener('click',function(){tab(b.dataset.tab)})});
+  tab('url');
 
   function go(){
     var v=$('url').value.trim();if(!v)return;
@@ -352,6 +414,7 @@ header b{font-size:20px;letter-spacing:-.01em}nav{display:flex;gap:22px;font-siz
   stage.addEventListener('drop',function(e){readFile(e.dataTransfer.files[0]);tab('file')});
   $('drop').addEventListener('drop',function(e){e.preventDefault();readFile(e.dataTransfer.files[0])});
 
+  $('q').addEventListener('input',function(){st.q=$('q').value;chips();list()});
   $('rot').addEventListener('click',function(){st.land=!st.land;render()});
   document.querySelectorAll('#zoom button').forEach(function(b){b.addEventListener('click',function(){st.zoom=b.dataset.z;document.querySelectorAll('#zoom button').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});fit()})});
   if(window.ResizeObserver)new ResizeObserver(fit).observe(stage);else window.addEventListener('resize',fit);
@@ -363,6 +426,6 @@ header b{font-size:20px;letter-spacing:-.01em}nav{display:flex;gap:22px;font-siz
     var n=cur==='dark'?'light':'dark';applyTheme(n);try{localStorage.setItem('sw-theme',n)}catch(e){}
   });
 
-  buildList();render();
+  chips();list();render();
 })();
 </script>
